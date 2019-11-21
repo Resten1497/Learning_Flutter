@@ -1,20 +1,41 @@
 import 'package:flutter/material.dart';
+import 'Page1.dart';
+void main() => runApp(MaterialApp(
+    home: Page1(),
+  ));
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
+class Page1 extends StatelessWidget {
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter layout demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Flutter layout demo'),
-        ),
-        body: Center(
-          child: Text('Hello World'),
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: RaisedButton(
+          child: Text('Go!'),
+          onPressed: () {
+            Navigator.of(context).push(_createRoute());
+          },
         ),
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => Page2(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+     
+    },
+  );
 }
